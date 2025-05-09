@@ -52,7 +52,7 @@ const DonationForm = ({ categoryName, onSuccess }: DonationFormProps) => {
     },
   });
 
-  const recipientEmail = "baapt2326@gmail.com"; 
+  const recipientEmail = "user@example.com"; 
 
   async function onSubmit(values: DonationFormValues) {
     setIsSubmitting(true);
