@@ -1,8 +1,32 @@
+"use client";
+
 import DonationCategories from '@/components/donation/DonationCategories';
 import MembershipSection from '@/components/membership/MembershipSection';
 import { Separator } from '@/components/ui/separator';
+import { useEffect } from 'react';
 
 export default function Home() {
+  useEffect(() => {
+    // Force load URLs on homepage load
+    const loadUrls = async () => {
+      try {
+        const response = await fetch('/api/get-urls');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.urls) {
+            localStorage.setItem("urlConfig", JSON.stringify(data.urls));
+            window.dispatchEvent(new CustomEvent('urlConfigUpdated', { detail: data.urls }));
+            console.log('URLs loaded on homepage:', data.urls);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading URLs on homepage:', error);
+      }
+    };
+    
+    loadUrls();
+  }, []);
+
   return (
     <div className="space-y-12">
       <section id="donate" aria-labelledby="donate-heading">

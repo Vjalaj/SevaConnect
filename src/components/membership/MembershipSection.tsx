@@ -26,14 +26,8 @@ const MembershipSection = () => {
       <Card className="max-w-2xl mx-auto shadow-xl bg-card overflow-hidden">
         <div className="md:flex">
           <div className="md:shrink-0">
-            <div className="relative h-48 w-full object-cover md:h-full md:w-48">
-              <Image 
-                src="https://picsum.photos/seed/membership_perks/400/400" 
-                alt="SevaChampion Membership" 
-                layout="fill" 
-                objectFit="cover"
-                data-ai-hint="membership certificate"
-              />
+            <div className="relative h-48 w-full object-cover md:h-full md:w-48 bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+              <Award size={64} className="text-accent" />
             </div>
           </div>
           <div className="p-8 flex flex-col justify-between">

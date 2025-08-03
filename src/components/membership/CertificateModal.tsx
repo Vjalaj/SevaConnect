@@ -68,17 +68,8 @@ const CertificateModal = ({ isOpen, onOpenChange, donorName }: CertificateModalP
         <div className="p-6">
           {/* Certificate Design */}
           <div ref={certificateRef} className="border-4 border-accent p-4 rounded-lg bg-card shadow-2xl relative aspect-[4/3] overflow-hidden">
-            {/* Background Pattern - ensure picsum allows CORS or use local image */}
-            <div className="absolute inset-0 opacity-10 -z-10">
-                <Image 
-                  src="https://picsum.photos/seed/certificatepattern/800/600" // Replace with a reliable/local image if CORS issues persist
-                  alt="decorative pattern" 
-                  layout="fill" 
-                  objectFit="cover" 
-                  data-ai-hint="abstract pattern certificate"
-                  priority // Preload background
-                />
-            </div>
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-10 -z-10 bg-gradient-to-br from-primary/20 to-accent/20" />
             <div className="text-center space-y-3 sm:space-y-4 h-full flex flex-col justify-center items-center p-2 sm:p-4">
               <Award size={64} className="text-accent mb-2 sm:mb-4" />
               <h3 className="text-2xl sm:text-3xl font-serif font-bold text-primary">Certificate of Appreciation</h3>

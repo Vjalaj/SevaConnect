@@ -167,12 +167,33 @@ cd sevaconnect
 # Install dependencies (this may take 2-3 minutes)
 npm install
 
-# Copy environment template
+# Copy environment templates
 cp .env.example .env.local
+cp URL.env.example URL.env
+cp INFO.env.example INFO.env
 ```
 
 #### **Step 2: Environment Configuration**
 Open `.env.local` in your text editor and configure the following:
+
+#### **Step 3: Admin Configuration Files**
+SevaConnect uses two additional configuration files for admin-managed content:
+
+```bash
+# Create admin configuration files from examples
+cp URL.env.example URL.env
+cp INFO.env.example INFO.env
+```
+
+**📁 URL.env Configuration:**
+- Contains all image URLs for donation categories
+- Admin can modify these through the admin panel
+- Supports any public image URL (Google Drive, Dropbox, etc.)
+
+**📁 INFO.env Configuration:**
+- Contains organization information displayed in info dialog
+- Admin can edit title, location, and content
+- Supports formatted text with headings and paragraphs
 
 ---
 
@@ -394,6 +415,67 @@ INSTAMOJO_ENDPOINT=https://test.instamojo.com/api/1.1/
 
 ---
 
+### 🔧 **Admin Configuration Files Setup**
+
+#### **URL.env - Image URL Management**
+
+```bash
+# Copy the example file
+cp URL.env.example URL.env
+```
+
+**📝 Configure Image URLs:**
+```env
+# Category Image URLs - Admin can modify these
+ORPHANAGE_IMAGE_URL=https://your-domain.com/images/orphanage.jpg
+GOWSHALA_IMAGE_URL=https://your-domain.com/images/gowshala.jpg
+VRIDHA_ASHRAM_IMAGE_URL=https://your-domain.com/images/vridha_ashram.jpg
+HEALTH_GENERAL_IMAGE_URL=https://your-domain.com/images/health_general.jpg
+HEALTH_SAMUHIK_VIVAH_IMAGE_URL=https://your-domain.com/images/health_samuhik_vivah.jpg
+POOJA_PATH_IMAGE_URL=https://your-domain.com/images/pooja_path.jpg
+EYE_CAMP_IMAGE_URL=https://your-domain.com/images/eye_camp.jpg
+ENVIRONMENTAL_IMAGE_URL=https://your-domain.com/images/environmental.jpg
+
+# Organization Info URLs
+ORGANIZATION_LOCATION_URL=https://maps.google.com/your-location
+ORGANIZATION_WEBSITE_URL=https://your-organization-website.com
+```
+
+**🎯 Image URL Guidelines:**
+- **Recommended Size**: 400x300px for optimal display
+- **Supported Sources**: Google Drive, Dropbox, any public URL
+- **Format**: JPG, PNG, WebP supported
+- **Admin Control**: URLs can be changed through admin panel
+
+#### **INFO.env - Organization Information**
+
+```bash
+# Copy the example file
+cp INFO.env.example INFO.env
+```
+
+**📝 Configure Organization Info:**
+```env
+# Organization Information - Admin configurable
+ORGANIZATION_TITLE=Your Organization Name
+ORGANIZATION_LOCATION=Your City, State, Country
+ORGANIZATION_CONTENT=Your organization description here.\n\nServices:\n\nService 1:\nDescription of service 1.\n\nService 2:\nDescription of service 2.
+```
+
+**📝 Content Formatting Rules:**
+- **Line Breaks**: Use `\n` for single line breaks
+- **Paragraphs**: Use `\n\n` for paragraph breaks
+- **Headings**: Text ending with `:` becomes bold headings
+- **Admin Control**: Content can be edited through admin panel with format toggle
+
+**🔧 Admin Panel Features:**
+- **Format Toggle**: Convert between natural text and formatted text
+- **Real-time Preview**: See changes immediately
+- **File-based Storage**: Content persists across server restarts
+- **Secure Access**: Only authorized admin can modify content
+
+---
+
 ## 🏗️ Project Architecture Deep Dive
 
 ### 📁 **Detailed Directory Structure**
@@ -475,6 +557,10 @@ SevaConnect/
 │
 ├── 📄 .env.example               # Environment template
 ├── 📄 .env.local                 # Your environment variables (gitignored)
+├── 📄 URL.env                    # Admin URL configuration (gitignored)
+├── 📄 URL.env.example            # URL configuration template
+├── 📄 INFO.env                   # Admin info content (gitignored)
+├── 📄 INFO.env.example           # Info content template
 ├── 📄 .gitignore                 # Git ignore rules
 ├── 📄 components.json            # Radix UI configuration
 ├── 📄 next.config.ts             # Next.js configuration
