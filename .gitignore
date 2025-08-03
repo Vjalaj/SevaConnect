@@ -65,8 +65,7 @@ jspm_packages/
 .cache
 .parcel-cache
 
-# Next.js build output
-.next
+
 
 # Nuxt.js build / generate output
 .nuxt
@@ -86,6 +85,7 @@ temp/
 # Editor directories and files
 .vscode/
 .idea/
+.idx/
 *.swp
 *.swo
 *~

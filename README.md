@@ -161,7 +161,7 @@ Before starting, ensure you have:
 #### **Step 1: Clone and Setup**
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/sevaconnect.git
+git clone https://github.com/Vjalaj/SevaConnect.git
 cd sevaconnect
 
 # Install dependencies (this may take 2-3 minutes)
@@ -1063,7 +1063,7 @@ We welcome contributions from developers, designers, and philanthropists! Here's
 ```bash
 # Fork the repository on GitHub
 # Clone your fork
-git clone https://github.com/your-username/sevaconnect.git
+git clone https://github.com/Vjalaj/SevaConnect.git
 cd sevaconnect
 
 # Add upstream remote
@@ -1551,7 +1551,7 @@ By using SevaConnect, you agree to:
 ### 🚀 **Get Started Today**
 
 ```bash
-git clone https://github.com/your-username/sevaconnect.git
+git clone https://github.com/Vjalaj/SevaConnect.git
 cd sevaconnect
 npm install
 npm run dev
