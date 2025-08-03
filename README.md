@@ -928,7 +928,7 @@ services:
 - name: web
   source_dir: /
   github:
-    repo: your-username/sevaconnect
+    repo: Vjalaj/SevaConnect.git
     branch: main
   run_command: npm start
   environment_slug: node-js
@@ -1559,7 +1559,7 @@ npm run dev
 
 ### 🤝 **Join Our Community**
 
-[![GitHub Stars](https://img.shields.io/github/stars/your-username/sevaconnect?style=social)](https://github.com/your-username/sevaconnect)
+[![GitHub Stars](https://img.shields.io/github/stars/Vjalaj/SevaConnect.git?style=social)](https://github.com/Vjalaj/SevaConnect.git)
 [![Twitter Follow](https://img.shields.io/twitter/follow/sevaconnect?style=social)](https://twitter.com/sevaconnect)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=social&logo=linkedin)](https://linkedin.com/company/sevaconnect)
 
@@ -1580,6 +1580,6 @@ If SevaConnect has helped your organization, consider:
 
 **🌟 SevaConnect - Where Generosity Meets Technology 🌟**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-username/sevaconnect)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Vjalaj/SevaConnect.git)
 
 </div>
