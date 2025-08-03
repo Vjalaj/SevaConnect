@@ -52,7 +52,61 @@ const DonationForm = ({ categoryName, onSuccess }: DonationFormProps) => {
     },
   });
 
-  const recipientEmail = "user@example.com"; 
+  const recipientEmail = process.env.NEXT_PUBLIC_RECIPIENT_EMAIL; 
+
+  const handleInstamojoPay = async (values: DonationFormValues) => {
+    try {
+      const response = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: values.amount,
+          name: values.name,
+          email: values.email,
+          purpose: `Donation for ${categoryName}`,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        window.open(result.payment_url, '_blank');
+        onSuccess(values.amount, values.name);
+      } else {
+        toast({
+          title: "Payment Error",
+          description: result.message || "Failed to create payment",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to process payment",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRazorpayPay = (values: DonationFormValues) => {
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      amount: values.amount * 100,
+      currency: 'INR',
+      name: 'SevaConnect',
+      description: `Donation for ${categoryName}`,
+      handler: () => {
+        onSuccess(values.amount, values.name);
+        toast({ title: "Payment Successful", description: "Thank you for your donation!" });
+      },
+      prefill: {
+        name: values.name,
+        email: values.email,
+      },
+    };
+    
+    const rzp = new (window as any).Razorpay(options);
+    rzp.open();
+  };
 
   async function onSubmit(values: DonationFormValues) {
     setIsSubmitting(true);
@@ -67,11 +121,7 @@ const DonationForm = ({ categoryName, onSuccess }: DonationFormProps) => {
     onSuccess(values.amount, values.name);
     
     // Submit the actual HTML form to FormSubmit.co in a new tab
-    // This happens after our local modal logic has initiated.
-    // The form has target="_blank" so this will open a new tab.
     if (formRef.current) {
-        // We need to ensure hidden fields are populated with latest react-hook-form values
-        // Manually update hidden fields before submission if they depend on form.watch()
         const replyToInput = formRef.current.querySelector('input[name="_replyto"]') as HTMLInputElement | null;
         if (replyToInput) replyToInput.value = values.email;
 
@@ -81,10 +131,8 @@ const DonationForm = ({ categoryName, onSuccess }: DonationFormProps) => {
         formRef.current.submit();
     }
     
-    // Reset form on the original page
     form.reset(); 
-    // setIsSubmitting(false); // Keep button disabled or in loading state briefly
-    setTimeout(() => setIsSubmitting(false), 1500); // Re-enable after a short delay
+    setTimeout(() => setIsSubmitting(false), 1500);
   }
 
   return (
@@ -153,20 +201,54 @@ const DonationForm = ({ categoryName, onSuccess }: DonationFormProps) => {
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-lg py-6"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Processing...
-            </>
-          ) : (
-            `Donate ₹${form.watch('amount') || 0} Now`
-          )}
-        </Button>
+        <div className="space-y-3">
+          <Button
+            type="submit"
+            className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-lg py-6"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              `Donate ₹${form.watch('amount') || 0} via Form`
+            )}
+          </Button>
+          
+          <Button
+            type="button"
+            onClick={() => handleRazorpayPay(form.getValues())}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg py-6"
+            disabled={isSubmitting || !form.formState.isValid}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              `Pay ₹${form.watch('amount') || 0} via Razorpay`
+            )}
+          </Button>
+          
+          <Button
+            type="button"
+            onClick={() => handleInstamojoPay(form.getValues())}
+            className="w-full bg-primary hover:bg-primary/90 text-lg py-6"
+            disabled={isSubmitting || !form.formState.isValid}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              `Pay ₹${form.watch('amount') || 0} via Instamojo`
+            )}
+          </Button>
+        </div>
         <p className="text-xs text-muted-foreground text-center">
           You'll be directed to complete your submission in a new tab.
         </p>

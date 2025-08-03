@@ -1,7 +1,8 @@
 
 import Link from 'next/link';
-import { HandHeart } from 'lucide-react'; 
+import { HandHeart, Info } from 'lucide-react'; 
 import ThemeToggle from './ThemeToggle';
+import InfoDialog from './InfoDialog';
 // import AuthButton from '@/components/auth/AuthButton'; // Removed
 
 const Header = () => {
@@ -13,10 +14,13 @@ const Header = () => {
           <h1 className="text-2xl font-bold tracking-tight">SevaConnect</h1>
         </Link>
         <div className="flex items-center gap-4">
-          {/* <nav>
-            <Link href="/about" className="hover:text-accent transition-colors">About</Link>
-          </nav> */}
-          {/* <AuthButton /> Removed */}
+          <nav className="flex items-center gap-4">
+            <div className="flex items-center gap-1">
+              <Link href="/gallery" className="hover:text-accent transition-colors">Gallery</Link>
+              <InfoDialog />
+            </div>
+            <Link href="/admin" className="hover:text-accent transition-colors text-sm">Admin</Link>
+          </nav>
           <ThemeToggle />
         </div>
       </div>

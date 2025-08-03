@@ -51,8 +51,62 @@ const MembershipForm = ({ onSuccess }: MembershipFormProps) => {
     },
   });
 
-  const recipientEmail = "baapt2326@gmail.com"; 
+  const recipientEmail = process.env.NEXT_PUBLIC_RECIPIENT_EMAIL; 
   const categoryName = "SevaChampion Membership";
+
+  const handleInstamojoPay = async (values: MembershipFormValues) => {
+    try {
+      const response = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: FIXED_MEMBERSHIP_AMOUNT,
+          name: values.name,
+          email: values.email,
+          purpose: `SevaChampion Membership - ${values.name}`,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        window.open(result.payment_url, '_blank');
+        onSuccess(values.name);
+      } else {
+        toast({
+          title: "Payment Error",
+          description: result.message || "Failed to create payment",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to process payment",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRazorpayPay = (values: MembershipFormValues) => {
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      amount: FIXED_MEMBERSHIP_AMOUNT * 100,
+      currency: 'INR',
+      name: 'SevaConnect',
+      description: 'SevaChampion Membership',
+      handler: () => {
+        onSuccess(values.name);
+        toast({ title: "Payment Successful", description: "Welcome to SevaChampion!" });
+      },
+      prefill: {
+        name: values.name,
+        email: values.email,
+      },
+    };
+    
+    const rzp = new (window as any).Razorpay(options);
+    rzp.open();
+  };
 
   async function onSubmit(values: MembershipFormValues) {
     setIsSubmitting(true);
@@ -63,12 +117,9 @@ const MembershipForm = ({ onSuccess }: MembershipFormProps) => {
       variant: "default",
     });
     
-    // Call onSuccess immediately to trigger certificate modal display
     onSuccess(values.name); 
 
-    // Submit the actual HTML form to FormSubmit.co in a new tab
     if (formRef.current) {
-        // Manually update hidden fields before submission
         const replyToInput = formRef.current.querySelector('input[name="_replyto"]') as HTMLInputElement | null;
         if (replyToInput) replyToInput.value = values.email;
 
@@ -79,8 +130,7 @@ const MembershipForm = ({ onSuccess }: MembershipFormProps) => {
     }
     
     form.reset();
-    // setIsSubmitting(false); // Keep button disabled or in loading state briefly
-    setTimeout(() => setIsSubmitting(false), 1500); // Re-enable after a short delay
+    setTimeout(() => setIsSubmitting(false), 1500);
   }
 
   return (
@@ -142,23 +192,63 @@ const MembershipForm = ({ onSuccess }: MembershipFormProps) => {
           </FormControl>
         </FormItem>
 
-        <Button
-          type="submit"
-          className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-lg py-6"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Processing...
-            </>
-          ) : (
-            <>
-              <Award className="mr-2 h-5 w-5" />
-              Join for ₹{FIXED_MEMBERSHIP_AMOUNT}
-            </>
-          )}
-        </Button>
+        <div className="space-y-3">
+          <Button
+            type="submit"
+            className="w-full bg-accent hover:bg-accent/90 text-accent-foreground text-lg py-6"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              <>
+                <Award className="mr-2 h-5 w-5" />
+                Join via Form - ₹{FIXED_MEMBERSHIP_AMOUNT}
+              </>
+            )}
+          </Button>
+          
+          <Button
+            type="button"
+            onClick={() => handleRazorpayPay(form.getValues())}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg py-6"
+            disabled={isSubmitting || !form.formState.isValid}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              <>
+                <Award className="mr-2 h-5 w-5" />
+                Pay ₹{FIXED_MEMBERSHIP_AMOUNT} via Razorpay
+              </>
+            )}
+          </Button>
+          
+          <Button
+            type="button"
+            onClick={() => handleInstamojoPay(form.getValues())}
+            className="w-full bg-primary hover:bg-primary/90 text-lg py-6"
+            disabled={isSubmitting || !form.formState.isValid}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              <>
+                <Award className="mr-2 h-5 w-5" />
+                Pay ₹{FIXED_MEMBERSHIP_AMOUNT} via Instamojo
+              </>
+            )}
+          </Button>
+        </div>
         <p className="text-xs text-muted-foreground text-center">
           You'll be directed to complete your submission in a new tab.
         </p>
